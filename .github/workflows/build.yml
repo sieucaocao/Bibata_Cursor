@@ -1,18 +1,23 @@
 name: build
 
 on:
-  push:
-    paths-ignore:
-      - "**.md"
-      - LICENSE
-      - .github/FUNDING.yml
-    branches: [main, dev]
-  pull_request:
-    paths-ignore:
-      - "**.md"
-      - LICENSE
-      - .github/FUNDING.yml
-    branches: [main]
+  workflow_dispatch:
+  #push:
+    #paths-ignore:
+      #- "**.md"
+      #- LICENSE
+      #- .github/FUNDING.yml
+    #branches: [main, dev]
+  #pull_request:
+    #paths-ignore:
+      #- "**.md"
+      #- LICENSE
+      #- .github/FUNDING.yml
+    #branches: [main]
+env:
+  BUILD_TOML: configs/normal/win_rg.build.toml
+  OS: windows
+  SIZE: 36
 
 jobs:
   build:
@@ -53,5 +58,14 @@ jobs:
           clickgen --version
           ctgen --version
 
+      - name: Custom Bibata Cursors Size & Color
+        run: ctgen $BUILD_TOML -s $SIZE -p $OS -d 'bitmaps/Bibata-Modern-Ice' -o 'out' -n 'Bibata-Modern-Ice' -c 'White and rounded egde Bibata cursors with size $SIZE'
+
       - name: Building Bibata Cursors
         run: yarn build
+
+      - name: Upload Build Cursor Bibata
+        uses: actions/upload-artifact@main
+        with:
+          name:  Bibata_Windows
+          path: ./out
